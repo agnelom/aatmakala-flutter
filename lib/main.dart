@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'widgets/aatmkala_app_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'widgets/aatmkala_app_bar.dart';
 import 'core/env.dart';
 import 'data/contentful/contentful_graphql.dart';
 import 'screens/home_screen.dart';
 import 'screens/section_list_screen.dart';
 import 'screens/article_detail_screen.dart';
+import 'screens/about_screen.dart';
+import 'screens/books_screen.dart';
 import 'theme/sattva_theme.dart';
 
 Future<void> main() async {
@@ -36,6 +38,12 @@ class AatmkalaApp extends StatelessWidget {
       title: dotenv.env['APP_NAME'] ?? 'Aatmkala',
       theme: SattvaTheme.light(),
       home: HomeScreen(contentful: contentful),
+      // Static routes that don't need arguments
+      routes: {
+        AboutScreen.routeName: (_) => AboutScreen(contentful: contentful),
+        BooksScreen.routeName: (_) => BooksScreen(contentful: contentful),
+      },
+      // Routes that need arguments
       onGenerateRoute: (settings) {
         if (settings.name == SectionListScreen.routeName) {
           final args = settings.arguments as SectionListArgs;

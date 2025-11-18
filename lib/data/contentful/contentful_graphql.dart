@@ -381,4 +381,123 @@ class ContentfulGraph {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>?> fetchAbout() async {
+  await _ensureOnline();
+
+  const String query = r'''
+    query GetAbout {
+      aboutCollection(limit: 1) {
+        items {
+          title
+          body {
+            json
+          }
+        }
+      }
+    }
+  ''';
+
+  try {
+    final res = await client.query(
+      QueryOptions(
+        document: gql(query),
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+
+    if (res.hasException) {
+      Log.e('GraphQL exception in fetchAbout: ${res.exception}');
+      throw res.exception!;
+    }
+
+    final aboutCollection =
+        res.data?['aboutCollection'] as Map<String, dynamic>?;
+
+    if (aboutCollection == null) {
+      return null;
+    }
+
+    final items = aboutCollection['items'] as List<dynamic>? ?? [];
+    if (items.isEmpty) {
+      // No About entries found in Contentful
+      return null;
+    }
+
+    final about = items.first as Map<String, dynamic>;
+    final bodyObj = about['body'] as Map<String, dynamic>?;
+    final bodyJson = bodyObj?['json']; // <-- Contentful rich text document
+
+    return {
+      'title': about['title'] ?? 'About Aatmkala',
+      'body': bodyJson, // <-- pass the raw rich-text JSON to the UI
+    };
+  } catch (e, st) {
+    Log.e('fetchAbout failed', e, st);
+    rethrow;
+  }
+}
+
+  Future<List<Map<String, dynamic>>> fetchBooks() async {
+  await _ensureOnline();
+
+  const String query = r'''
+    query BooksList {
+      booksCollection(order: title_ASC) {
+        items {
+          title
+          body
+          buyLink
+          coverImage {
+            url
+            description
+          }
+        }
+      }
+    }
+  ''';
+
+  try {
+    final res = await client.query(
+      QueryOptions(
+        document: gql(query),
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+
+    if (res.hasException) {
+      Log.e('GraphQL exception in fetchBooks: ${res.exception}');
+      throw res.exception!;
+    }
+
+    final booksCollection =
+        res.data?['booksCollection'] as Map<String, dynamic>?;
+
+    if (booksCollection == null) {
+      return <Map<String, dynamic>>[];
+    }
+
+    final items = booksCollection['items'] as List<dynamic>? ?? [];
+    final List<Map<String, dynamic>> books = [];
+
+    for (final item in items) {
+      if (item is! Map<String, dynamic>) continue;
+
+      final cover = item['coverImage'] as Map<String, dynamic>?;
+
+      books.add({
+        'title': item['title'] ?? '',
+        'body': item['body'] ?? '',
+        'buyLink': item['buyLink'],
+        'coverImageUrl': cover?['url'],
+      });
+    }
+
+    return books;
+  } catch (e, st) {
+    Log.e('fetchBooks failed', e, st);
+    rethrow;
+  }
+}
+
 }

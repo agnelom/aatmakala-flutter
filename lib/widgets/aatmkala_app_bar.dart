@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../theme/sattva_theme.dart';
 
 class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,7 +22,7 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF2E7D32), // <- fixed green
+      backgroundColor: const Color(0xFF2E7D32),
       elevation: 0,
       centerTitle: false,
       leadingWidth: showBack ? 96 : 56,
@@ -63,19 +65,20 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-/// Shared logo widget — final path as requested
+/// Shared logo widget
 class AatmkalaLogo extends StatelessWidget {
   const AatmkalaLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/images/aatmkala_logo.png', // <- your logo path
+      'assets/images/aatmkala_logo.png',
       fit: BoxFit.contain,
     );
   }
 }
 
+// Menu items
 enum AppMenuItem {
   home,
   about,
@@ -96,7 +99,6 @@ class _AppMenu extends StatelessWidget {
       ),
       offset: const Offset(0, kToolbarHeight),
       itemBuilder: (context) => [
-        // ----- HOME -----
         PopupMenuItem(
           value: AppMenuItem.home,
           child: Row(
@@ -104,17 +106,14 @@ class _AppMenu extends StatelessWidget {
               Icon(
                 Icons.home,
                 size: 20,
-                color: SattvaTheme.saffron, // saffron-colored icon
+                color: SattvaTheme.saffron,
               ),
               const SizedBox(width: 12),
               const Text('Home'),
             ],
           ),
         ),
-
         const PopupMenuDivider(height: 8),
-
-        // ----- ABOUT -----
         PopupMenuItem(
           value: AppMenuItem.about,
           child: Row(
@@ -129,8 +128,6 @@ class _AppMenu extends StatelessWidget {
             ],
           ),
         ),
-
-        // ----- BOOKS -----
         PopupMenuItem(
           value: AppMenuItem.books,
           child: Row(
@@ -145,8 +142,6 @@ class _AppMenu extends StatelessWidget {
             ],
           ),
         ),
-
-        // ----- YOUTUBE -----
         PopupMenuItem(
           value: AppMenuItem.youtubeChannel,
           child: Row(
@@ -168,13 +163,13 @@ class _AppMenu extends StatelessWidget {
             _navigateHome(context);
             break;
           case AppMenuItem.about:
-            _showNotLinkedYet(context, 'About');
+            Navigator.of(context).pushNamed('/about');
             break;
           case AppMenuItem.books:
-            _showNotLinkedYet(context, 'Books');
+            Navigator.of(context).pushNamed('/books');
             break;
           case AppMenuItem.youtubeChannel:
-            _showNotLinkedYet(context, 'YouTube Channel');
+            _launchYouTubeChannel();
             break;
         }
       },
@@ -190,8 +185,9 @@ void _navigateHome(BuildContext context) {
   Navigator.of(context).popUntil((route) => route.isFirst);
 }
 
-void _showNotLinkedYet(BuildContext context, String label) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('$label tapped (not yet linked)')),
-  );
+Future<void> _launchYouTubeChannel() async {
+  final Uri url = Uri.parse('https://www.youtube.com/@aatmkala');
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    debugPrint('Could not launch YouTube channel.');
+  }
 }
