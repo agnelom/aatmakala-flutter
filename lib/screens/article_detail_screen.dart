@@ -27,7 +27,9 @@ class ArticleDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AatmkalaAppBar(), // constant green AppBar
+      appBar: const AatmkalaAppBar(
+        showBack: true,
+      ), // constant green AppBar
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>?>(
           future: contentful.fetchArticle(entryId),

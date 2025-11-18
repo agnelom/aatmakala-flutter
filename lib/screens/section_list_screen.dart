@@ -25,7 +25,10 @@ class SectionListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AatmkalaAppBar(), // constant green AppBar
+      appBar: AatmkalaAppBar(
+        showBack: true,
+        titleText: args.title, // or whatever your section title is
+      ),
       body: SafeArea(
         child: Column(
           children: [

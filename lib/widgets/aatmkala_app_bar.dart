@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 import '../theme/sattva_theme.dart';
 
 class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AatmkalaAppBar({super.key});
+  /// If true, shows a back button before the logo.
+  final bool showBack;
+
+  /// Optional custom title. Defaults to "Aatmkala".
+  final String? titleText;
+
+  const AatmkalaAppBar({
+    super.key,
+    this.showBack = false,
+    this.titleText,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -10,21 +20,39 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF2E7D32), // or const Color(0xFF2E7D32)
+      backgroundColor: const Color(0xFF2E7D32), // <- fixed green
       elevation: 0,
-      leadingWidth: 56,
+      centerTitle: false,
+      leadingWidth: showBack ? 96 : 56,
       leading: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: InkWell(
-          onTap: () => _navigateHome(context),
-          borderRadius: BorderRadius.circular(8),
-          child: const AatmkalaLogo(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (showBack)
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                splashRadius: 20,
+                onPressed: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            Expanded(
+              child: InkWell(
+                onTap: () => _navigateHome(context),
+                borderRadius: BorderRadius.circular(8),
+                child: const AatmkalaLogo(),
+              ),
+            ),
+          ],
         ),
       ),
       titleSpacing: 0,
-      title: const Text(
-        'Aatmkala',
-        style: TextStyle(
+      title: Text(
+        titleText ?? 'Aatmkala',
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -35,14 +63,14 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-/// Shared logo widget — ensure the correct path
+/// Shared logo widget — final path as requested
 class AatmkalaLogo extends StatelessWidget {
   const AatmkalaLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/images/aatmkala_logo.png', // <-- update this if your path differs
+      'assets/images/aatmkala_logo.png', // <- your logo path
       fit: BoxFit.contain,
     );
   }
@@ -62,7 +90,7 @@ class _AppMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<AppMenuItem>(
       icon: const Icon(Icons.menu),
-      elevation: 3,
+      elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -72,25 +100,32 @@ class _AppMenu extends StatelessWidget {
         PopupMenuItem(
           value: AppMenuItem.home,
           child: Row(
-            children: const [
-              Icon(Icons.home, size: 20),
-              SizedBox(width: 12),
-              Text('Home'),
+            children: [
+              Icon(
+                Icons.home,
+                size: 20,
+                color: SattvaTheme.saffron, // saffron-colored icon
+              ),
+              const SizedBox(width: 12),
+              const Text('Home'),
             ],
           ),
         ),
 
-        // Divider
         const PopupMenuDivider(height: 8),
 
         // ----- ABOUT -----
         PopupMenuItem(
           value: AppMenuItem.about,
           child: Row(
-            children: const [
-              Icon(Icons.info_outline, size: 20),
-              SizedBox(width: 12),
-              Text('About'),
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: 20,
+                color: SattvaTheme.saffron,
+              ),
+              const SizedBox(width: 12),
+              const Text('About'),
             ],
           ),
         ),
@@ -99,10 +134,14 @@ class _AppMenu extends StatelessWidget {
         PopupMenuItem(
           value: AppMenuItem.books,
           child: Row(
-            children: const [
-              Icon(Icons.menu_book_outlined, size: 20),
-              SizedBox(width: 12),
-              Text('Books'),
+            children: [
+              Icon(
+                Icons.menu_book_outlined,
+                size: 20,
+                color: SattvaTheme.saffron,
+              ),
+              const SizedBox(width: 12),
+              const Text('Books'),
             ],
           ),
         ),
@@ -111,10 +150,14 @@ class _AppMenu extends StatelessWidget {
         PopupMenuItem(
           value: AppMenuItem.youtubeChannel,
           child: Row(
-            children: const [
-              Icon(Icons.ondemand_video, size: 20),
-              SizedBox(width: 12),
-              Text('YouTube Channel'),
+            children: [
+              Icon(
+                Icons.ondemand_video,
+                size: 20,
+                color: SattvaTheme.saffron,
+              ),
+              const SizedBox(width: 12),
+              const Text('YouTube Channel'),
             ],
           ),
         ),
@@ -140,7 +183,7 @@ class _AppMenu extends StatelessWidget {
 }
 
 //
-// Helper Functions
+// Helper functions
 //
 
 void _navigateHome(BuildContext context) {
