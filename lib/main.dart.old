@@ -1,0 +1,34 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/env.dart';
+import 'core/theme.dart';
+import 'app_router.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');  // must happen before runApp
+  runApp(const ProviderScope(child: AatmkalaApp()));
+}
+
+class AatmkalaApp extends StatelessWidget {
+  const AatmkalaApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = _hex(Env.brandPrimary);
+    final accent = _hex(Env.brandAccent);
+    return MaterialApp.router(
+      title: Env.appName,
+      theme: AppTheme.light(primary: primary, accent: accent),
+      darkTheme: AppTheme.dark(primary: primary, accent: accent),
+      routerConfig: router,
+    );
+  }
+}
+
+Color _hex(String hex) {
+  final h = hex.replaceAll('#', '');
+  return Color(int.parse('FF$h', radix: 16));
+}

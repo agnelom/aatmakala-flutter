@@ -1,0 +1,163 @@
+import 'package:graphql_flutter/graphql_flutter.dart';
+import '../../core/env.dart';
+import '../../core/error_logger.dart';
+
+/// GraphQL service for Contentful (CDA). Works on Web + Mobile.
+/// - Uses multi-collection list query to avoid fragment/schema surprises.
+/// - Provides a tolerant single-entry query with per-type fragments.
+class ContentfulGraph {
+  late final GraphQLClient client;
+
+  ContentfulGraph() {
+    final endpoint = Env.graphqlEndpoint;
+
+    // Log sanity (no token printed)
+    Log.d('Graph endpoint => $endpoint');
+    Log.d('Token present? ${Env.contentfulToken.isNotEmpty} len=${Env.contentfulToken.length}');
+
+    final httpLink = HttpLink(endpoint);
+
+    // Auth header -> "Authorization: Bearer <token>"
+    final authLink = AuthLink(
+      getToken: () async => 'Bearer ${Env.contentfulToken}',
+    );
+
+    // VERY IMPORTANT: concat auth -> http
+    final link = authLink.concat(httpLink);
+
+    client = GraphQLClient(
+      link: link,
+      cache: GraphQLCache(),
+    );
+    
+  }
+
+  /// Returns a flat list of entries from all relevant collections.
+  Future<List<Map<String, dynamic>>> fetchArticles({int limit = 20}) async {
+    const q = r'''
+      query GetAll($limit: Int!) {
+        kaavyaCollection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } poemTitle poemImage { url } }
+        }
+        kaavyaManthanCollection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } title body }
+        }
+        patanjali2Collection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } title body }
+        }
+        qandACollection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } title body }
+        }
+        scheduleCollection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } title date }
+        }
+        scienceAndReligionCollection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } title body }
+        }
+        # Books exist in your space; fetch ids for now (add fields later once confirmed)
+        booksCollection(limit: $limit, order: [sys_publishedAt_DESC]) {
+          items { __typename sys { id } }
+        }
+      }
+    ''';
+
+    try {
+      final res = await client.query(
+        QueryOptions(
+          document: gql(q),
+          variables: {'limit': limit},
+          fetchPolicy: FetchPolicy.networkOnly,
+        ),
+      );
+
+      if (res.hasException) {
+        Log.e('GraphQL exception in fetchArticles: ${res.exception}');
+        throw res.exception!;
+      }
+
+      final data = res.data ?? <String, dynamic>{};
+      final List<Map<String, dynamic>> all = [];
+
+      void take(String key) {
+        final col = data[key] as Map<String, dynamic>?;
+        final items = (col?['items'] as List?) ?? const [];
+        all.addAll(items.cast<Map<String, dynamic>>());
+      }
+
+      take('kaavyaCollection');
+      take('kaavyaManthanCollection');
+      take('patanjali2Collection');
+      take('qandACollection');
+      take('scheduleCollection');
+      take('scienceAndReligionCollection');
+      take('booksCollection');
+
+      Log.d('Fetched ${all.length} entries from multi-collection query');
+      return all;
+    } catch (e, st) {
+      Log.e('Contentful fetchArticles failed', e, st);
+      rethrow;
+    }
+  }
+
+  /// Returns a single entry by id with per-type fields.
+  Future<Map<String, dynamic>?> fetchArticle(String id) async {
+    const q = r'''
+      query GetItem($id: String!) {
+        entry(id: $id) {
+          __typename
+          sys { id }
+
+          ... on Kaavya {
+            poemTitle
+            poemImage { url }
+          }
+          ... on KaavyaManthan {
+            title
+            body
+          }
+          ... on Patanjali2 {
+            title
+            body
+          }
+          ... on QandA {
+            title
+            body
+          }
+          ... on Schedule {
+            title
+            date
+          }
+          ... on ScienceAndReligion {
+            title
+            body
+          }
+          # Books - add fields here once confirmed in schema
+          ... on Books {
+            _id
+          }
+        }
+      }
+    ''';
+
+    try {
+      final res = await client.query(
+        QueryOptions(
+          document: gql(q),
+          variables: {'id': id},
+          fetchPolicy: FetchPolicy.networkOnly,
+        ),
+      );
+
+      if (res.hasException) {
+        Log.e('GraphQL exception in fetchArticle: ${res.exception}');
+        throw res.exception!;
+      }
+
+      return res.data?['entry'] as Map<String, dynamic>?;
+    } catch (e, st) {
+      Log.e('Contentful fetchArticle failed', e, st);
+      rethrow;
+    }
+  }
+}

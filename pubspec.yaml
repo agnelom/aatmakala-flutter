@@ -1,0 +1,47 @@
+name: aatmkala_flutter
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  connectivity_plus: ^6.0.3
+
+  # State & routing
+  flutter_riverpod: ^2.5.1
+  go_router: ^14.2.7
+
+  # Networking & Contentful
+  graphql_flutter: ^5.1.2
+  http: ^1.2.2
+
+  # Env & storage
+  flutter_dotenv: ^5.2.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Rendering
+  flutter_widget_from_html: ^0.15.3
+  cached_network_image: ^3.4.1
+
+  # Utils
+  collection: ^1.18.0
+
+  # Material Icons
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/env/.env
+    - assets/images/aatmkala_logo.png

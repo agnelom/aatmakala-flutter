@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="/" />
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="Aatmkala" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#4B7F52" />
+    <title>Aatmkala</title>
+  </head>
+  <body>
+    <!-- Flutter engine loader -->
+    <script src="flutter.js" defer></script>
+    <script>
+      window.addEventListener('load', function () {
+        _flutter.loader.loadEntrypoint({
+          serviceWorker: {
+            // Set to a string like 'v1' if you enable a service worker later
+            serviceWorkerVersion: null,
+          },
+          onEntrypointLoaded: function (engineInitializer) {
+            engineInitializer.initializeEngine().then(function (appRunner) {
+              appRunner.runApp();
+            });
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
