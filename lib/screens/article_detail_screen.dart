@@ -44,7 +44,7 @@ class ArticleDetailScreen extends StatelessWidget {
               if (hasError) return '';
               if (article == null) return '';
               final t = (article['title'] ?? '') as String;
-              return t.trim().length > 35 ? '' : t;
+              return t.trim().length > 50 ? '' : t;
             }();
 
             return Column(
@@ -106,7 +106,7 @@ class ArticleDetailScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 4, bottom: 12),
                                 child: Text(
-                                  type,
+                                  " ",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey.shade700,

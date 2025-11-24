@@ -7,7 +7,7 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// If true, shows a back button before the logo.
   final bool showBack;
 
-  /// Optional custom title. Defaults to "Aatmkala".
+  /// Optional custom title. Defaults to "आत्मकला".
   final String? titleText;
 
   const AatmkalaAppBar({
@@ -24,7 +24,7 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: const Color(0xFF2E7D32),
       elevation: 0,
-      centerTitle: false,
+      centerTitle: true,
       leadingWidth: showBack ? 96 : 56,
       leading: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -53,7 +53,7 @@ class AatmkalaAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       titleSpacing: 0,
       title: Text(
-        titleText ?? 'Aatmkala',
+        titleText ?? 'आत्मकला',
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -109,7 +109,7 @@ class _AppMenu extends StatelessWidget {
                 color: SattvaTheme.saffron,
               ),
               const SizedBox(width: 12),
-              const Text('Home'),
+              const Text('होम'),
             ],
           ),
         ),
@@ -124,7 +124,7 @@ class _AppMenu extends StatelessWidget {
                 color: SattvaTheme.saffron,
               ),
               const SizedBox(width: 12),
-              const Text('About'),
+              const Text('आत्मकला विषयी'),
             ],
           ),
         ),
@@ -138,7 +138,7 @@ class _AppMenu extends StatelessWidget {
                 color: SattvaTheme.saffron,
               ),
               const SizedBox(width: 12),
-              const Text('Books'),
+              const Text('पुस्तके'),
             ],
           ),
         ),
@@ -152,7 +152,7 @@ class _AppMenu extends StatelessWidget {
                 color: SattvaTheme.saffron,
               ),
               const SizedBox(width: 12),
-              const Text('YouTube Channel'),
+              const Text('YouTube चॅनल'),
             ],
           ),
         ),

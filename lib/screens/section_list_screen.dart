@@ -121,7 +121,8 @@ class _SectionListScreenState extends State<SectionListScreen> {
     return Scaffold(
       appBar: AatmkalaAppBar(
         showBack: true,
-        titleText: args.title,
+        titleText: "आत्मकला",
+      //  titleText: args.title,
       ),
       body: SafeArea(
         child: Column(
@@ -134,6 +135,7 @@ class _SectionListScreenState extends State<SectionListScreen> {
               child: Center(
                 child: Text(
                   args.title,
+                //  "आत्मकला",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -199,6 +201,7 @@ class _SectionListScreenState extends State<SectionListScreen> {
             child: ListTile(
               title: Text(
                 item['title'] ?? '',
+              //  "आत्मकला",
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
               trailing: const Icon(Icons.chevron_right),

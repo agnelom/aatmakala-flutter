@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               child: const Column(
                 children: [
                   Text(
-                    'Aatmkala',
+                    'आत्मकला',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    '"Healthy Body, Healthy Mind, Happy Life"',
+                    '"स्वस्थ शरीर, स्वस्थ मन, आनंदी जीवन"',
                     style: TextStyle(color: Colors.white, fontSize: 13),
                   ),
                 ],
