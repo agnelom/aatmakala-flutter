@@ -31,7 +31,7 @@ class BooksScreen extends StatelessWidget {
               color: SattvaTheme.saffron,
               child: const Center(
                 child: Text(
-                  'Books',
+                  'पुस्तके',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

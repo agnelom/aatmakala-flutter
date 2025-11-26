@@ -178,30 +178,30 @@ class ArticleDetailScreen extends StatelessWidget {
                                 ),
                               ),
 
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: GradientButton(
-                                    text: 'Back to List',
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: GradientButton(
-                                    text: 'Home',
-                                    onPressed: () => Navigator.of(context)
-                                        .popUntil((r) => r.isFirst),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // const SizedBox(height: 20),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: GradientButton(
+                            //         text: 'Back to List',
+                            //         onPressed: () =>
+                            //             Navigator.of(context).pop(),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 12),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: GradientButton(
+                            //         text: 'Home',
+                            //         onPressed: () => Navigator.of(context)
+                            //             .popUntil((r) => r.isFirst),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       );
